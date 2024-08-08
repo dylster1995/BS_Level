@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BS Readings</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <div id="data" data-chartData='<%= data %>'></div>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      const chartData = JSON.parse(document.getElementById('data').dataset.chartdata);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(chartData);
+
+        var options = {
+          title: 'Blood Sugar',
+        //   curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+      }
+      window.addEventListener('resize', () => {
+        drawChart();
+      });
+    </script>
+</head>
+<body> 
+    <p><%= superdate %></p>
+    <div class="container">
+        <div class="row">
+        <div class="col-6 d-flex justify-content-end mt-3">
+            <label for="dateFrom">From: </label>
+            <input type="date" id="dateFrom" name="dateFrom" value="<%= weekAgo %>" />
+        </div>
+        <div class="col-6 mt-3">
+            <label for="dateTo">To:</label>
+            <input type="date" id="dateTo" name="dateTo" value="<%= today %>" max="<%= today %>" />
+        </div>
+    </div>
+        <div class=" mx-auto">
+            <div id="curve_chart" style="width: 100%; height: 50vh;"></div>
+        </div>
+        <% if(user === 'susan') { %>
+            <form action="/" method="post">
+                    <div class="mb-3 col-md-6 col-12 mx-auto mt-2">
+                        <label class='form-label' for="bloodsugar">Blood Sugar:</label>
+                    </div>
+                    <div class="mb-3 col-md-6 col-12 mx-auto">
+                        <input id="bloodsugar" class="form-control" type="number" pattern="[0-9]*" name="bloodsugar">
+                    </div>
+                    <div class="mb-3 col-md-6 col-12 mx-auto d-flex">
+                        <input class="btn btn-primary w-100" type="submit">
+                    </div>
+            </form>
+        <% } %>
+    </div>  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+</body>
+</html>
